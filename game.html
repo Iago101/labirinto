@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>As Ruínas</title>
+</head>
+<body id="body" onclick="playMusic()" style="background-color: black;">
+    <div  style="height:90vh; color: aliceblue;" >
+        {{ruins}}
+    </div>
+
+    <audio loop id="divAudio">
+        <source src="./assets/ruins.mp3" type="audio/mp3"/>
+    </audio>
+</body>
+
+<script>
+    var vAudio = document.getElementById("divAudio");
+    var hasInit = false;
+    function playMusic(){
+      if(!hasInit)
+      {
+          hasInit = true;
+          vAudio.play();
+      }
+    }
+
+    var ruins = Array(10).fill(null).map(() => Array(10).fill(0));
+    function fillRuin(){
+        var room;
+        var filler;
+        filler = Math.floor(Math.random() * 100);
+
+        if(filler<30){
+            room = 'nothing';
+        }
+        else if(filler<50){
+            room = 'wall';
+        }
+        else if(filler<70){
+            room = 'minotaur';
+        }
+        else if(filler<90){
+            room = 'potion';
+        }
+        else if(filler<=100){
+            room = 'chest';
+        }
+        // switch(filler){ para até 10
+        //     case 0:
+        //         room = 'nothing'
+        //     break;
+        //     case 1:
+        //         room = 'nothing'
+        //     break;
+        //     case 2:
+        //         room = 'nothing'
+        //     break;
+        //     case 3:
+        //         room = 'wall'
+        //     break;
+        //     case 4:
+        //         room = 'wall'
+        //     break;
+        //     case 5:
+        //         room = 'minotaur'
+        //     break;
+        //     case 6:
+        //         room = 'minotaur'
+        //     break;
+        //     case 7:
+        //         room = 'potion'
+        //     break;
+        //     case 8:
+        //         room = 'chest'
+        //     break;
+        //     case 9:
+        //         room = 'chest'
+        //     break;
+        //     case 10:
+        //         room = 'chest'
+        //     break;
+        // }
+        return room;
+    }
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            ruins[i][j] = fillRuin();
+        }
+        ruins[i][j] = fillRuin();
+    }
+
+    ruins[0][0] = 'galduk';
+    ruins[5][5] = 'exit';
+
+    console.log(ruins);
+
+    function lootChest(){
+        var loot;
+        loot = Math.floor(Math.random() * 4);
+
+        switch (loot) {
+            case 1:
+                found('pickaxe');
+                break;
+            case 2:
+                found('potion');
+            break;
+            case 3:
+                galduk.pickaxes =+ 1;
+            break;
+            case 4:
+                galduk.pickaxes =+ 1;
+            break;
+        
+        }
+    }
+
+    function found(encounter){
+        switch (encounter) {
+            case 'pickaxe':
+                galduk.pickaxes++;
+            break;
+            case 'wall':
+                if(galduk.pickaxe_current_durability > 0){
+                    galduk.pickaxe_current_durability--;
+                }
+            break;
+            case 'minotaur':
+                galduk.current_health--;
+                if(galduk.current_health == 0){
+                    endGame();
+                }
+            break;
+            case 'potion':
+                if(galduk.max_health>galduk.current_health){
+                    galduk.current_health++;
+                }
+            break;
+        
+        }
+    }
+
+    galduk = {
+        "position":[0,0],
+        "pickaxes":1,
+        "pickaxe_current_durability":3,
+        "torch_range":1,
+        "max_health":3,
+        "current_health":3,
+        "armor":1,
+    };
+
+    minotaur = {
+        "damage": 1,
+        "health": 1
+    }
+//    function startSound(){
+//     var audio = new Audio("./assets/start_game.mp3");
+//     audio.play();
+//     document.getElementById('body').classList.remove('fade-in'); 
+//     document.getElementById('body').classList.add('fade-out'); 
+//     setTimeout(()=>{window.location.href = 'game.html'}, 2300);
+//     //window.location.href = 'game.html';
+//    }
+</script>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telkarion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="body"  onclick="playMusic()"  class="fade-in" style="background-color: black;" >
+    <video autoplay muted loop id="myVideo">
+        <source src="./assets/images/menu/y5aghDE.mp4" type="video/mp4">
+    </video>
+
+    <div class="flex-container" style="position:fixed; left: 50%; transform: translateX(-50%); width: 90vw;" align="center">
+        <div>
+            <p style="font-size: 100px; color: white;">
+                As Ruínas de Telkarion
+            </p>
+        </div>
+        <div align="center">
+            <button class="myBtn" onclick="startSound()">
+                Adentrar as Ruínas
+            </button>
+        </div>
+    </div>
+
+    <audio loop id="divAudio">
+        <source src="./assets/music/menu.mp3" type="audio/mp3"/>
+    </audio>
+</body>
+
+<script>
+    var vAudio = document.getElementById("divAudio");
+   var hasInit = false;
+
+   function playMusic(){
+      if(!hasInit)
+      {
+          hasInit = true;
+          vAudio.play();
+      }
+   }
+
+   var video = document.getElementById("myVideo");
+   function myFunction() {
+        if (video.paused) {
+            video.play();
+        } else {
+            video.pause();
+        }
+    }
+   function startSound(){
+    var audio = new Audio("./assets/sounds/start_game.mp3");
+    audio.play();
+    document.getElementById('body').classList.remove('fade-in'); 
+    document.getElementById('body').classList.add('fade-out'); 
+    setTimeout(()=>{window.location.href = 'game.html'}, 2300);
+    //window.location.href = 'game.html';
+   }
+</script>
+
+</html>
