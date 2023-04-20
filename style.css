@@ -1,3 +1,46 @@
+.grid{
+  width: 100px;
+  height: 100px;
+  outline: 2px solid grey;
+}
+
+.imageWrapper{
+  position:relative;
+}
+
+.overlayImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  background: #6C7A89;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  }
+
+table{
+  margin:0;
+  padding:0
+}
+
+
+.occult{
+  opacity: 0;
+}
+.revealed{
+  opacity: 1;
+}
+
+table, th, td {
+  border: 2px solid;
+}
+
 .flex-container {
     justify-content: center;
     display: flex;
@@ -7,6 +50,14 @@
   #myVideo {
     position: fixed;
     right: -7%;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  #myVideo2 {
+    position: fixed;
+    right: 0;
     bottom: 0;
     min-width: 100%;
     min-height: 100%;
@@ -28,7 +79,23 @@
     color: black;
   }
 
-.fade-out {
+  .myBtn2 {
+    height: 50px;
+    width: 200px;
+    font-size: 18px;
+    padding: 10px;
+    border: none;
+    background: white;
+    color: red;
+    cursor: pointer;
+  }
+
+  .myBtn2:hover {
+    background: black;
+    color: white;
+  }
+
+  .fade-out {
     animation: fadeOut ease 2.3s;
     -webkit-animation: fadeOut ease 2.3s;
     -moz-animation: fadeOut ease 2.3s;
@@ -78,6 +145,58 @@
     100% {
       opacity:0;
   }
+}
+
+.fade-out2 {
+  animation: fadeOut ease 7.3s;
+  -webkit-animation: fadeOut ease 7.3s;
+  -moz-animation: fadeOut ease 7.3s;
+  -o-animation: fadeOut ease 7.3s;
+  -ms-animation: fadeOut ease 7.3s;
+}
+@keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-ms-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+}
 }
 
 .fade-in {

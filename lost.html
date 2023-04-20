@@ -4,30 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telkarion</title>
+    <title>Derrota</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body id="body"  onclick="playMusic()"  class="fade-in" style="width: 90vw;height: 90vh;background-color: black;" >
-    <video autoplay muted loop id="myVideo2">
-        <source src="./assets/images/menu/y5aghDE.mp4" type="video/mp4">
-    </video>
+<body id="body"  onclick="playMusic()"  class="fade-in" style=" width: 90vw;height: 90vh ;background-image: url('./assets/images/game/dead.jpg'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;" >
 
     <div class="flex-container" style="position:fixed; left: 50%; transform: translateX(-50%); width: 90vw;" align="center">
         <div>
-            <p style="font-size: 100px; color: white;">
-                As Ruínas de Telkarion
+            <p style="font-size: 100px; color: red;text-shadow: red 1px 0 20px;">
+                A Morte veio lhe acolher
             </p>
         </div>
         <div align="center">
-            <button class="myBtn" onclick="startSound()">
-                Adentrar as Ruínas
+            <button class="myBtn2" onclick="startSound()">
+                Ainda não é o fim
             </button>
         </div>
     </div>
 
     <audio loop id="divAudio">
-        <source src="./assets/music/menu.mp3" type="audio/mp3"/>
+        <source src="./assets/music/lost.mp3" type="audio/mp3"/>
     </audio>
 </body>
 
@@ -52,7 +49,7 @@
         }
     }
    function startSound(){
-    var audio = new Audio("./assets/sounds/start_game.mp3");
+    var audio = new Audio("./assets/sounds/start_game.mp3");    
     audio.volume = 0.3;
     audio.play();
     document.getElementById('body').classList.remove('fade-in'); 

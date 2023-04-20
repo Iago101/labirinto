@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telkarion</title>
+    <title>Vitória</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body id="body"  onclick="playMusic()"  class="fade-in" style="width: 90vw;height: 90vh;background-color: black;" >
     <video autoplay muted loop id="myVideo2">
-        <source src="./assets/images/menu/y5aghDE.mp4" type="video/mp4">
+        <source src="./assets/images/game/4txfolgzb6j51.mp4" type="video/mp4">
     </video>
 
     <div class="flex-container" style="position:fixed; left: 50%; transform: translateX(-50%); width: 90vw;" align="center">
         <div>
-            <p style="font-size: 100px; color: white;">
-                As Ruínas de Telkarion
+            <p style="font-size: 100px; color: gold; text-shadow: #FC0 1px 0 10px;">
+                A cidade perdida ainda vive
             </p>
         </div>
         <div align="center">
-            <button class="myBtn" onclick="startSound()">
-                Adentrar as Ruínas
-            </button>
+            <p style="font-size: 40px; color: silver; text-shadow: black 1px 0 20px; width: 50vw;">
+                Telkarion ainda mantém seu subsolo profundo intocado pelos minotauros, e ali, outros anões o acolhem para um dia revitalizar a Montanha
+            </p>
         </div>
     </div>
 
     <audio loop id="divAudio">
-        <source src="./assets/music/menu.mp3" type="audio/mp3"/>
+        <source src="./assets/music/victory.mp3" type="audio/mp3"/>
     </audio>
 </body>
 
@@ -53,7 +53,6 @@
     }
    function startSound(){
     var audio = new Audio("./assets/sounds/start_game.mp3");
-    audio.volume = 0.3;
     audio.play();
     document.getElementById('body').classList.remove('fade-in'); 
     document.getElementById('body').classList.add('fade-out'); 

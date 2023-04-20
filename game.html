@@ -5,24 +5,200 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>As Ruínas</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
-<body id="body" onclick="playMusic()" style="background-color: black;">
-    <div  style="height:90vh; color: aliceblue;" >
-        {{ruins}}
+<body id="body" onclick="playMusic()" class="container" style="background-color: black; margin: 0">
+
+    <table style="position: fixed; top:0; right:0; background-color: black;">
+        <tr>
+            <td>
+                <div style="border: solid; color:aliceblue; max-width: fit-content; text-align: center;">
+                    <img src="./assets/images/game/heart.png" width="75" />
+                    <p id="lifes" style="color: aliceblue; font-size: 30px; margin: 0;">
+                        
+                    </p>
+                </div>
+            </td>
+            <td>
+                <div style="border: solid; color:aliceblue; max-width: fit-content; text-align: center;" onclick="usePotion();">
+                    <img src="./assets/images/game/potion.png" width="75" />
+                    <p id="potions" style="color: aliceblue; font-size: 30px; margin: 0;">
+                        
+                    </p>
+                </div>
+            </td>
+            <td>
+                <div style="border: solid; color:aliceblue; max-width: fit-content;  text-align: center;">
+                    <img src="./assets/images/game/Pickaxe.gif" width="75" />
+                    <p id="pickaxes" style="color: aliceblue; font-size: 30px; margin: 0;">
+                        
+                    </p>
+                    <p id="durability" style="color:grey; font-size: 30px; margin: 0;">
+                        
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    
+    <div id="grid" style="height:90vh; color: aliceblue;margin-top: 173px;">
+    <p style="border: solid; color:aliceblue; font-size: 25px; width:fit-content">
+        Guia da Masmorra: <br>
+        -Utilize o botão "H" para consumir uma poção e se curar dos ferimentos. <br>
+        -Você pode derrubar paredes, mas isso danifica a sua picareta. <br>
+        -Baús podem conter picaretas ou poções. <br>
+        -Encontros com Minotauros são perigosos e podem custar a sua vida. <br>
+        -Você pode utilizar o mouse para se locomover, clicando nos quadrados <br>
+        adjascentes ao Herói, é possível também clicar no ícone da poção <br>
+        na barra de informações.
+    </p>
     </div>
 
     <audio loop id="divAudio">
-        <source src="./assets/ruins.mp3" type="audio/mp3"/>
+        <source src="./assets/music/ruins.mp3" type="audio/mp3"/>
     </audio>
 </body>
 
 <script>
+    function initialize(){
+        
+    }
+
+    initialize();
+
+    function revealArea(){
+        var around = [-1, +1, -10, +10, -11, +11, -9, +9];
+
+        if(galduk.position % 10 == 0){
+            var hide = [-1,9,-11];
+            around = around.filter(item => !hide.includes(item));
+        }
+
+        if((galduk.position + 1) % 10 == 0){
+            var hide = [1,-9,11];
+            around = around.filter(item => !hide.includes(item));
+        }
+
+        for (var i = 0; i < around.length; i++) {
+            if(document.getElementById((galduk.position)+(around[i]))?.childNodes[0]){
+                var reveal = document.getElementById((galduk.position)+(around[i])).childNodes[0];
+                reveal.classList.add("revealed");
+            }
+        }
+    }
+
+    function scrollTo (el) {
+        const elLeft = el.offsetLeft + el.offsetWidth;
+        const elParentLeft = el.parentNode.offsetLeft + el.parentNode.offsetWidth;
+
+        if (elLeft >= elParentLeft + el.parentNode.scrollLeft) {
+            el.parentNode.scrollLeft = elLeft - elParentLeft;
+        } else if (elLeft <= el.parentNode.offsetLeft + el.parentNode.scrollLeft) {
+            el.parentNode.scrollLeft = el.offsetLeft - el.parentNode.offsetLeft;
+        }
+    }
+
+    function move(direction){
+        var spot = document.getElementById(galduk.position);
+        spot.childNodes[0].src = "";
+        switch (direction) {
+            case 'right':
+                galduk.position++;
+            break;
+
+            case 'left':
+                galduk.position--;
+            break;
+
+            case 'up':
+                galduk.position -= 10;
+            break;
+            
+            case 'down':
+                galduk.position += 10;
+                break;
+                
+                default:
+                    break;
+        }
+        document.getElementById(galduk.position).childNodes[0].src = "./assets/images/game/galduk.gif";
+        revealArea();
+    }
+
+    function usePotion(){
+        if(galduk.potions > 0 && galduk.current_health < galduk.max_health){
+            soundEffect('drink');
+            galduk.potions--;
+            galduk.current_health++;
+
+            document.getElementById('lifes').innerHTML = galduk.current_health + '/' + galduk.max_health
+            document.getElementById('potions').innerHTML = galduk.potions
+        }
+    };
+    
+    document.onkeydown = function(e) {
+        if(galduk.alive === true){
+            var encounter;
+            clickMoveRemover();
+    
+            switch (e.keyCode) {
+                case 37:
+                    if((galduk.position) % 10 == 0){
+                        break;
+                    }
+                    encounter = document.getElementById(galduk.position - 1)?.getAttribute('data-content');
+                    if(found(encounter)){
+                        move('left');
+                    }
+                    break;
+                case 38:
+                    if( (galduk.position - 10) < 0){
+                        break;
+                    }
+                    encounter = document.getElementById(galduk.position - 10)?.getAttribute('data-content');
+                    if(found(encounter)){
+                        move('up');
+                    }
+                    break;
+                case 39:
+                    if((galduk.position + 1) % 10 == 0){
+                        break;
+                    }
+                    encounter = document.getElementById(galduk.position + 1)?.getAttribute('data-content');
+                    if(found(encounter)){
+                        move('right');
+                    }
+                    break;
+                case 40:
+                    if( (galduk.position + 10) > 99){
+                        break;
+                    }
+                    encounter = document.getElementById(galduk.position + 10)?.getAttribute('data-content');
+                    if(found(encounter)){
+                        move('down');
+                    }
+                    break;
+                case 72:
+                    usePotion();
+                    break;
+            }
+            document.getElementById(galduk.position).setAttribute('data-content', 'nothing');
+            document.getElementById(galduk.position).scrollIntoView({behavior:"auto",block: "center"});
+            scrollTo(document.getElementById(galduk.position));
+            clickMoveSetter();
+        }
+
+    };
+    
     var vAudio = document.getElementById("divAudio");
     var hasInit = false;
     function playMusic(){
       if(!hasInit)
       {
           hasInit = true;
+          vAudio.volume = 0.6;
           vAudio.play();
       }
     }
@@ -36,10 +212,10 @@
         if(filler<30){
             room = 'nothing';
         }
-        else if(filler<50){
+        else if(filler<60){
             room = 'wall';
         }
-        else if(filler<70){
+        else if(filler<80){
             room = 'minotaur';
         }
         else if(filler<90){
@@ -48,41 +224,6 @@
         else if(filler<=100){
             room = 'chest';
         }
-        // switch(filler){ para até 10
-        //     case 0:
-        //         room = 'nothing'
-        //     break;
-        //     case 1:
-        //         room = 'nothing'
-        //     break;
-        //     case 2:
-        //         room = 'nothing'
-        //     break;
-        //     case 3:
-        //         room = 'wall'
-        //     break;
-        //     case 4:
-        //         room = 'wall'
-        //     break;
-        //     case 5:
-        //         room = 'minotaur'
-        //     break;
-        //     case 6:
-        //         room = 'minotaur'
-        //     break;
-        //     case 7:
-        //         room = 'potion'
-        //     break;
-        //     case 8:
-        //         room = 'chest'
-        //     break;
-        //     case 9:
-        //         room = 'chest'
-        //     break;
-        //     case 10:
-        //         room = 'chest'
-        //     break;
-        // }
         return room;
     }
     for (var i = 0; i < 10; i++) {
@@ -91,72 +232,294 @@
         }
         ruins[i][j] = fillRuin();
     }
-
     ruins[0][0] = 'galduk';
-    ruins[5][5] = 'exit';
+    ruins[9][9] = 'exit';
 
-    console.log(ruins);
+    var table = document.createElement("table");
+    var id = 0;
+    for (var i = 0; i < 10; i++) {
+        var tr = document.createElement("tr");
+        for (var j = 0; j < 10; j++) {
+            var td = document.createElement("td");
+            td.setAttribute("data-content", ruins[i][j]);
+            td.setAttribute("id", id);
+            id++;
+            var img = document.createElement("img");
+            img.width = "100"
+            img.classList.add("occult")
+            td.classList.add('grid');
 
-    function lootChest(){
-        var loot;
-        loot = Math.floor(Math.random() * 4);
-
-        switch (loot) {
-            case 1:
-                found('pickaxe');
+            switch (td.getAttribute("data-content")) {
+                case "galduk":
+                    img.src = "./assets/images/game/galduk.gif";
+                    img.classList.add("revealed")
                 break;
-            case 2:
-                found('potion');
-            break;
-            case 3:
-                galduk.pickaxes =+ 1;
-            break;
-            case 4:
-                galduk.pickaxes =+ 1;
-            break;
-        
-        }
-    }
+                case "wall":
+                    //td.style.backgroundColor = "grey";
+                    img.src = "./assets/images/game/wall.png";
+                break;
+                case "minotaur":
+                    img.src = "./assets/images/game/minotaur.png";
+                break;
+                case "potion":
+                    img.src = "./assets/images/game/potion.png";
+                break;
+                case "chest":
+                    img.src = "./assets/images/game/chest.png";
+                break;
+                case "exit":
+                    img.src = "./assets/images/game/exit.png";
+                    img.classList.add("revealed");
 
-    function found(encounter){
-        switch (encounter) {
-            case 'pickaxe':
-                galduk.pickaxes++;
-            break;
-            case 'wall':
-                if(galduk.pickaxe_current_durability > 0){
-                    galduk.pickaxe_current_durability--;
-                }
-            break;
-            case 'minotaur':
-                galduk.current_health--;
-                if(galduk.current_health == 0){
-                    endGame();
-                }
-            break;
-            case 'potion':
-                if(galduk.max_health>galduk.current_health){
-                    galduk.current_health++;
-                }
-            break;
-        
+                break;
+            
+                default:
+                    break;
+            }
+            
+            td.appendChild(img)
+            tr.appendChild(td);
         }
+        table.appendChild(tr);
     }
+    document.getElementById('grid').appendChild(table);
 
     galduk = {
-        "position":[0,0],
+        "position":0,
+        "potions":1,
         "pickaxes":1,
         "pickaxe_current_durability":3,
         "torch_range":1,
         "max_health":3,
         "current_health":3,
         "armor":1,
+        "alive":true
     };
 
     minotaur = {
         "damage": 1,
         "health": 1
     }
+
+
+
+    function clickMoveSetter(){
+        document.getElementById(galduk.position+1)?.addEventListener('click', function (event) {
+            document.dispatchEvent(new KeyboardEvent("keydown", {
+                keyCode: 39,
+            }));
+        });
+        // var img = document.createElement("img");
+        // img.classList.add("overlayImage");
+        // img.setAttribute('id', 'arrow');
+        // img.width = 100;
+        // img.style.opacity= 0.5;
+        // img.src = "./assets/images/game/arrow.png"
+        // document.getElementById(galduk.position+1)?.classList.add('imageWrapper');
+        // document.getElementById(galduk.position+1)?.appendChild(img);
+
+        document.getElementById(galduk.position-1)?.addEventListener('click', function (event) {
+            document.dispatchEvent(new KeyboardEvent("keydown", {
+                keyCode: 37,
+            }));
+        });
+
+        document.getElementById(galduk.position+10)?.addEventListener('click', function (event) {
+            document.dispatchEvent(new KeyboardEvent("keydown", {
+                keyCode: 40,
+            }));
+        });
+
+        document.getElementById(galduk.position-10)?.addEventListener('click', function (event) {
+            document.dispatchEvent(new KeyboardEvent("keydown", {
+                keyCode: 38,
+            }));
+        });
+    }
+
+    function clickMoveRemover(){
+        if(document.getElementById(galduk.position+1)){
+            document.getElementById(galduk.position+1).outerHTML = document.getElementById(galduk.position+1).outerHTML
+        }
+        if(document.getElementById(galduk.position-1)){
+            document.getElementById(galduk.position-1).outerHTML = document.getElementById(galduk.position-1).outerHTML
+        }
+        if(document.getElementById(galduk.position+10)){
+            document.getElementById(galduk.position+10).outerHTML = document.getElementById(galduk.position+10).outerHTML
+        }
+        if(document.getElementById(galduk.position-10)){
+            document.getElementById(galduk.position-10).outerHTML = document.getElementById(galduk.position-10).outerHTML
+        }
+    }
+
+    document.getElementById('lifes').innerHTML = galduk.current_health + '/' + galduk.max_health
+    document.getElementById('potions').innerHTML = galduk.potions
+    document.getElementById('pickaxes').innerHTML = galduk.pickaxes
+    document.getElementById('durability').innerHTML = galduk.pickaxe_current_durability
+    revealArea();
+    clickMoveSetter();
+
+    function lootChest(){
+        var loot;
+        loot = Math.floor(Math.random() * 2);
+        switch (loot) {
+            case 0:
+                found('pickaxe');
+                break;
+            case 1:
+                found('potion');
+            break;
+            // case 3:
+            //     galduk.pickaxes =+ 1;
+            // break;
+            // case 4:
+            //     galduk.pickaxes =+ 1;
+            // break;
+        }
+    }
+
+    function lost(){
+        galduk.alive = false;
+        setTimeout(()=>{death_effect.play();}, 2200);
+        var death_effect = new Audio("./assets/sounds/last_breath.mp3");
+        var vAudio = document.getElementById("divAudio");
+        vAudio.pause();
+        var audio = new Audio("./assets/sounds/death.mp3");
+        audio.play();
+        document.getElementById('body').classList.add('fade-out2'); 
+        setTimeout(()=>{window.location.href = 'lost.html'}, 7200);
+    }
+
+    function soundEffect(origin){
+        switch (origin) {
+            case 'item':
+                var audio = new Audio("./assets/sounds/item_pick.mp3");
+            break;
+            case 'drink':
+                var audio = new Audio("./assets/sounds/drink_potion.mp3");
+            break;
+            case 'chest':
+                var audio = new Audio("./assets/sounds/chest.mp3");
+            break;
+            case 'wall':
+                var audio = new Audio("./assets/sounds/wall_break.mp3");
+                audio.volume=0.5;
+            break;
+            case 'break':
+                var audio = new Audio("./assets/sounds/break.mp3");
+            break;
+            case 'combat':
+                var player;
+                var enemy;
+                var sorter =  Math.floor(Math.random() * 3);
+                switch (sorter) {
+                    case 0:
+                        player = new Audio("./assets/sounds/dwarf (1).mp3");
+                    break;
+                    case 1:
+                        player = new Audio("./assets/sounds/dwarf (2).mp3");
+                    break;
+                    case 2:
+                        player = new Audio("./assets/sounds/dwarf (3).mp3");
+                    break;
+                    case 3:
+                        player = new Audio("./assets/sounds/dwarf (4).mp3");
+                    break;
+                }
+                sorter =  Math.floor(Math.random() * 3);
+                switch (sorter) {
+                    case 0:
+                        enemy = new Audio("./assets/sounds/tauren1.mp3");
+                    break;
+                    case 1:
+                        enemy = new Audio("./assets/sounds/tauren2.mp3");
+                    break;
+                    case 2:
+                        enemy = new Audio("./assets/sounds/tauren3.mp3");
+                    break;
+                    case 3:
+                        enemy = new Audio("./assets/sounds/tauren4.mp3");
+                    break;
+                }
+                var audio = new Audio("./assets/sounds/combat.mp3");
+                audio.playbackRate = 4;
+                enemy.play();
+                player.play();
+            break;
+        
+            default:
+                break;
+        }
+        audio.play();
+    }
+
+    function found(encounter){
+        switch (encounter) {
+            case 'pickaxe':
+                galduk.pickaxes++;
+                document.getElementById('pickaxes').innerHTML = galduk.pickaxes
+                return true
+            break;
+            case 'wall':
+                if(galduk.pickaxe_current_durability == 0 && galduk.pickaxes > 0){
+                    galduk.pickaxe_current_durability =+ 5;
+                }
+
+                else if(galduk.pickaxe_current_durability > 0){
+                    galduk.pickaxe_current_durability--;
+                    if(galduk.pickaxe_current_durability == 0){
+                        soundEffect('break');
+                        galduk.pickaxes--;
+                    }
+                    document.getElementById('pickaxes').innerHTML = galduk.pickaxes
+                    document.getElementById('durability').innerHTML = galduk.pickaxe_current_durability
+                    soundEffect('wall');
+                    return true
+                }
+                else{
+                    return false;
+                }
+            break;
+            case 'minotaur':
+                soundEffect('combat');
+                galduk.current_health--;
+                document.getElementById('lifes').innerHTML = galduk.current_health + '/' + galduk.max_health
+
+                if(galduk.current_health == 0){
+                    lost();
+                }
+                return true
+            break;
+            case 'potion':
+                soundEffect('item');
+                galduk.potions++;
+                document.getElementById('potions').innerHTML = galduk.potions
+
+                return true
+            break;
+            case 'nothing':
+                return true
+            break;
+            case 'chest':
+                soundEffect('chest');
+                lootChest();
+                return true
+            break;
+            case 'galduk':
+                return true
+            break;
+            case 'exit':
+                window.location.href = 'won.html'
+                return true
+            break;
+            // default:
+            //     return false
+            // break;
+        
+        }
+    }
+
+    
 //    function startSound(){
 //     var audio = new Audio("./assets/start_game.mp3");
 //     audio.play();
